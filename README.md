@@ -7,9 +7,9 @@ Learn multiple languages at the same time.
 | frameworks | Django, Flask, FastAPI| Gin, Echo, Beego |  | SwiftUI, Vapor | Ktor, Jetpack, Srping Boot | Spring Boot | Flutter |
 memory management | GC | GC | Ownership | ARC | GC | GC | GC |
 constant declaration| `myConst = 10` | `const MY_CONST int = 10` | `const MY_CONST:i32 = 10;`  | `let myConst = 10` | `val MyConst = 10` | `final int MY_CONST = 10;` | `const myConst = 10;` or `final myConst; myConst = 10;`|
-| comment | `# comment-line` or `'''comment block'''` or `"""comment block"""` |  |  |
+| comment | `# comment line` or `'''comment block'''` or `"""comment block"""` | `//comment line` or `/* comment block */` |  | `//comment line` or `/* comment block */` or `/* out block /* inner block */ out block */` | `//comment line` or `/* comment block */` | `//comment line` or `/* comment block */` | |
 |multiple statements in 1 line| |||||
-|import modules| `import somemodule` or `from somemodule import function1, function2` | `` | `` | `` | `` | `` |
+|import modules| `import somemodule` or `from somemodule import function1, function2` | `import "somemodule"` | `use std::io::stdin;` | `import Cocoa` | `import somePackage.someModule.SomeClass` or `import somePackage.someModule.someFunction` | `import package1[.package2…].(classname/*);` | |
 |variable declaration | `myVar = 10` | `var myVar int; myVar = 10` or `var myVar = 10` or `myVar := 10` | `let mut myVar = 10` | `var myVar:Int` or ` var myVar = 10` | `var myVar:Int` or `var myVar = 10` | `int myVar = 10;` | `var myVar = 10;` |
 |Optionals|  |  |  | `var myVar:Int?` | `var myVar:Int?` |  |  |
 | print statement| `print("Hello, ", myVar)` | `import "fmt" fmt.Println("Hello",myVar)` |  | `print("Hello, \(myVar) ")` | `println("Hello, $myVar")` | `System.out.println("Hello"+myVar);` | |
