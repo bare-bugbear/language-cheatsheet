@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Language Cheatsheet</title>
+<style>
+:root {
+  --bg:#f6f7f9; --panel:#ffffff; --text:#111827; --muted:#6b7280;
+  --border:#e5e7eb; --code-bg:#f1f5f9; --code-fg:#0f172a;
+  --accent:#2563eb; --section:#f8fafc; --hover:#eff6ff;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+[data-theme="dark"] {
+  --bg:#0f172a; --panel:#1e293b; --text:#e2e8f0; --muted:#94a3b8;
+  --border:#334155; --code-bg:#0b1220; --code-fg:#e2e8f0;
+  --accent:#60a5fa; --section:#172033; --hover:#1e3a5f;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; }
+.app { max-width:1680px; margin:0 auto; padding:22px 22px 36px; }
+.top { display:flex; align-items:center; gap:16px; margin-bottom:16px; flex-wrap:wrap; }
+h1 { font-size:23px; margin:0 0 3px; letter-spacing:-.4px; }
+.sub { margin:0; font-size:13px; color:var(--muted); }
+.stat { margin-left:auto; font-size:12px; color:var(--muted); }
+.ghost { border:1px solid var(--border); background:var(--panel); color:var(--text);
+  border-radius:8px; padding:7px 13px; font-size:12px; cursor:pointer; }
+.ghost:hover { border-color:var(--accent); color:var(--accent); }
+.controls { background:var(--panel); border:1px solid var(--border); border-radius:12px;
+  padding:14px 16px; margin-bottom:14px; }
+.search-row { display:flex; align-items:center; gap:12px; margin-bottom:11px; flex-wrap:wrap; }
+#search { flex:1 1 320px; max-width:440px; padding:8px 12px; font-size:13px;
+  border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); }
+#search:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 2px rgba(37,99,235,.15); }
+.hint { font-size:12px; color:var(--muted); }
+.chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+.chip { border:1px solid var(--border); background:var(--panel); color:var(--muted);
+  border-radius:999px; padding:5px 12px; font-size:12px; cursor:pointer;
+  transition:background .12s,color .12s,border-color .12s; }
+.chip:hover { border-color:var(--accent); }
+.chip.on { background:var(--accent); border-color:var(--accent); color:#fff; }
+.presets { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.presets .label { font-size:12px; color:var(--muted); margin-right:2px; }
+.presets button { font-size:11px; padding:4px 9px; border:1px solid var(--border);
+  background:var(--bg); color:var(--muted); border-radius:6px; cursor:pointer; }
+.presets button:hover { color:var(--accent); border-color:var(--accent); }
+.table-wrap { background:var(--panel); border:1px solid var(--border); border-radius:12px;
+  overflow:auto; max-height:70vh; }
+table { border-collapse:separate; border-spacing:0; width:max-content; min-width:100%; font-size:12.5px; }
+th, td { border-bottom:1px solid var(--border); border-right:1px solid var(--border);
+  padding:9px 11px; text-align:left; vertical-align:top; }
+thead th { position:sticky; top:0; z-index:5; background:var(--section);
+  font-weight:600; font-size:12px; white-space:nowrap; }
+thead th.lang-col { cursor:pointer; }
+thead th.lang-col:hover { color:var(--accent); }
+.th-hint { display:block; font-weight:400; font-size:10px; color:var(--muted); margin-top:2px; }
+.feature-col { position:sticky; left:0; z-index:4; background:var(--panel);
+  min-width:205px; max-width:205px; width:205px; font-weight:600; font-size:12px; }
+thead .feature-col { z-index:6; background:var(--section); }
+tbody td { min-width:215px; max-width:310px; line-height:1.55; }
+.data-row:hover td, .data-row:hover th { background:var(--hover); }
+td.col-hl { background:var(--hover); }
+code { font-family:var(--mono); font-size:11.5px; background:var(--code-bg);
+  color:var(--code-fg); padding:1px 4px; border-radius:4px;
+  white-space:pre-wrap; word-break:break-word; }
+.na { color:var(--muted); }
+.section-row td { background:var(--section); font-weight:600; font-size:12px;
+  padding:8px 11px; cursor:pointer; letter-spacing:.02em; }
+.section-row:hover td { color:var(--accent); }
+.caret { color:var(--muted); margin-right:5px; }
+.sec-count { float:right; font-weight:400; color:var(--muted); font-size:11px; }
+.empty { padding:34px; text-align:center; color:var(--muted); }
+footer { margin-top:13px; font-size:11px; color:var(--muted); line-height:1.7; }
+footer code { font-size:11px; }
+@media (max-width:640px) {
+  .app { padding:14px; } .stat { margin-left:0; } .table-wrap { max-height:65vh; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div>
+      <h1>Language Cheatsheet</h1>
+      <p class="sub">One row = one syntax feature, one column = one programming language.</p>
+    </div>
+    <div class="stat"><span id="langCount"></span> languages &middot; <span id="featCount"></span> features</div>
+    <button id="themeBtn" class="ghost" type="button">Dark</button>
+  </header>
+
+  <section class="controls">
+    <div class="search-row">
+      <input id="search" type="search" placeholder="Search features or code, e.g. lambda / async / print" autocomplete="off">
+      <span id="matchInfo" class="hint"></span>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="presets">
+      <span class="label">Presets:</span>
+      <button type="button" data-preset="all">All</button>
+      <button type="button" data-preset="none">Clear</button>
+      <button type="button" data-preset="web">Web</button>
+      <button type="button" data-preset="systems">Systems</button>
+      <button type="button" data-preset="mobile">Mobile</button>
+      <button type="button" data-preset="scripting">Scripting</button>
+      <button type="button" data-preset="jvm">JVM / .NET</button>
+      <button type="button" data-preset="apple">Apple</button>
+    </div>
+  </section>
+
+  <main class="table-wrap">
+    <table id="grid">
+      <thead id="thead"></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </main>
+
+  <footer>
+    Generated from <code>README.md</code> by <code>python3 build.py</code> &mdash; edit the table, re-run, done.
+    Toggle languages above, click a column header to focus one language, click a section title to fold it.
+    Press <code>/</code> to search, <code>Esc</code> to clear.
+  </footer>
+</div>
+
+<script id="sheet-data" type="application/json">{"languages":["Python","Go","Rust","Swift","Kotlin","Java","Dart","ArkTS","JavaScript","TypeScript","C++","C#","Ruby","PHP","Lua","Objective-C"],"sections":[{"name":"Toolchain & Ecosystem","rows":[{"feature":"package management tools","cells":["pip, conda, uv, poetry","go mod, go get","Cargo","Swift Package Manager, CocoaPods","Gradle, Maven","Maven, Gradle","pub (`dart pub` / `flutter pub`)","ohpm","npm, yarn, pnpm","npm, yarn, pnpm","Conan, vcpkg (build: CMake)","NuGet (`dotnet add package`)","RubyGems, Bundler","Composer","`LuaRocks` (`luarocks`)","`CocoaPods`, `Carthage`, Swift Package Manager"]},{"feature":"frameworks","cells":["Django, Flask, FastAPI","Gin, Echo, Fiber","Axum, Actix-web, Tokio","SwiftUI, Vapor","Ktor, Spring Boot, Jetpack Compose","Spring Boot, Quarkus","Flutter","ArkUI, HarmonyOS SDK","React, Vue, Express, Next.js","NestJS, Next.js, Angular","Qt, Boost","ASP.NET Core, Unity","Ruby on Rails, Sinatra","Laravel, Symfony","LÖVE, OpenResty, Lapis, Roblox Luau","Cocoa / Cocoa Touch (Foundation, UIKit), AppKit"]},{"feature":"memory management","cells":["GC (refcount + generational)","GC (concurrent mark-sweep)","Ownership & borrow checker, no GC","ARC","GC (JVM)","GC (JVM, G1 / ZGC)","GC (generational)","GC (Ark Runtime)","GC (V8 etc.)","GC (JS engine)","manual / RAII + smart pointers","GC (.NET CLR)","GC (RGenGC)","refcount + cycle GC","GC (incremental mark-sweep; generational opt-in in 5.4)","ARC (or manual retain/release under MRC)"]},{"feature":"source file extension","cells":["`.py`","`.go`","`.rs`","`.swift`","`.kt`, `.kts`","`.java`","`.dart`","`.ets`","`.js`, `.mjs`, `.cjs`","`.ts`, `.tsx`","`.cpp`, `.hpp`","`.cs`","`.rb`","`.php`","`.lua`","`.h`, `.m` (`.mm` for Objective-C++)"]},{"feature":"program entry point","cells":["`if __name__ == \"__main__\": main()`","`func main() { }` (package main)","`fn main() { }`","`@main struct App { static func main() {} }`","`fun main() { }`","`public static void main(String[] args)`","`void main() { }`","`@Entry` component / `UIAbility` (no main)","top-level code (script / module)","top-level code (compiled to JS)","`int main() { return 0; }`","`static void Main(string[] args)` or top-level statements","top-level code","top-level code in `\u003c?php ... ?>`","top-level chunk, run via `lua main.lua`","`int main(int argc, char *argv[]) { @autoreleasepool { ... } }`"]}]},{"name":"Basic Syntax","rows":[{"feature":"comment","cells":["`# line`, `\"\"\"block\"\"\"` (docstring)","`// line`, `/* block */`","`// line`, `/* nestable */`, `/// doc`","`// line`, `/* nestable */`, `/// doc`","`// line`, `/* nestable */`, `/** KDoc */`","`// line`, `/* block */`, `/** Javadoc */`","`// line`, `/* block */`, `/// doc`","`// line`, `/* block */`","`// line`, `/* block */`","`// line`, `/* block */`","`// line`, `/* block */`","`// line`, `/* block */`, `/// XML doc`","`# line`, `=begin ... =end`","`// line`, `# line`, `/* block */`","`-- line`, `--[[ block ]]`","`// line`, `/* block */`"]},{"feature":"multiple statements in 1 line / statement terminator","cells":["`;` or newline; indentation defines blocks","`;` (auto-inserted); newline ends statement","`;` required","`;` optional, newline is enough","`;` optional, newline is enough","`;` required","`;` required","`;` optional (ASI)","`;` optional (ASI)","`;` optional (ASI)","`;` required","`;` required","newline or `;`","`;` required","newline or `;`; blocks end with `end`, indentation is free","`;` required"]},{"feature":"import modules","cells":["`import os` / `from os import path`","`import \"fmt\"` / `import ( \"fmt\"; \"os\" )`","`use std::io::stdin;` / `mod mymod;`","`import Foundation`","`import kotlin.math.PI`","`import java.util.List;`","`import 'dart:math';`","`import { UIAbility } from '@kit.AbilityKit';`","`import fs from 'node:fs';` / `const fs = require('fs');`","`import { ref } from 'vue';`","`#include \u003cvector>` / `import \u003ciostream>;` (C++20)","`using System.Collections.Generic;`","`require 'json'` / `require_relative 'lib'`","`require_once 'lib.php';` / `use App\\Models\\User;`","`require 'mymodule'`","`#import \u003cFoundation/Foundation.h>` / `@import UIKit;`"]},{"feature":"print statement","cells":["`print(\"Hello\", myVar)`","`fmt.Println(\"Hello\", myVar)`","`println!(\"Hello {}\", myVar);`","`print(\"Hello \\(myVar)\")`","`println(\"Hello $myVar\")`","`System.out.println(\"Hello \" + myVar);`","`print('Hello $myVar');`","`console.info('Hello ' + myVar);`","`console.log(\"Hello\", myVar);`","`console.log(\"Hello\", myVar);`","`std::cout \u003c\u003c \"Hello \" \u003c\u003c myVar \u003c\u003c std::endl;`","`Console.WriteLine($\"Hello {myVar}\");`","`puts \"Hello #{myVar}\"`","`echo \"Hello $myVar\";`","`print(\"Hello\", myVar)`","`NSLog(@\"Hello %@\", myVar);`"]},{"feature":"variable declaration","cells":["`myVar = 10`","`var myVar int = 10` / `myVar := 10`","`let mut myVar = 10;`","`var myVar: Int = 10`","`var myVar: Int = 10`","`int myVar = 10;` / `var myVar = 10;`","`var myVar = 10;` / `int myVar = 10;`","`let myVar: number = 10;` (`var` banned)","`let myVar = 10;` / `var myVar = 10;`","`let myVar: number = 10;`","`int myVar = 10;` / `auto myVar = 10;`","`int myVar = 10;` / `var myVar = 10;`","`my_var = 10`","`$myVar = 10;`","`local myVar = 10` (without `local` it is global)","`int myVar = 10;` / `NSString *myVar = @\"x\";`"]},{"feature":"constant declaration","cells":["`MY_CONST = 10` (convention only)","`const myConst = 10` / `const myConst int = 10`","`const MY_CONST: i32 = 10;`","`let myConst = 10`","`val myConst = 10`","`final int MY_CONST = 10;`","`const myConst = 10;` / `final myConst = 10;`","`const myConst: number = 10;`","`const myConst = 10;`","`const myConst: number = 10;`","`const int MY_CONST = 10;` / `constexpr int X = 10;`","`const int MyConst = 10;` / `readonly`","`MY_CONST = 10` (reassignment warns)","`const MY_CONST = 10;` / `define('MY_CONST', 10);`","`local MY_CONST \u003cconst> = 10` (Lua 5.4)","`const int MY_CONST = 10;` / `#define MY_CONST 10`"]},{"feature":"type inference","cells":["dynamic typing; optional hints `x: int = 10`","`x := 10` / `var x = 10`","`let x = 10;` (strong local inference)","✓","✓","`var x = 10;` (Java 10+, locals)","✓ (`var` / `final`)","✓ (must initialize or annotate)","dynamic typing","✓ (annotations optional)","`auto x = 10;`","`var x = 10;`","dynamic typing","dynamic typing (optional declarations)","dynamic typing (Luau adds optional annotations)","explicit static types; `id` / `instancetype`"]},{"feature":"primitive / scalar types","cells":["`int float complex bool str bytes NoneType`","`int int8..int64 uint uintptr float32 float64 complex64 complex128 bool byte rune string`","`i8..i128 u8..u128 isize usize f32 f64 bool char &str`","`Int UInt Float Double Bool String Character`","`Byte Short Int Long Float Double Boolean Char String`","`byte short int long float double boolean char` (+ `String` is a reference type)","`int double num bool String`","`number string boolean bigint null undefined`","`number bigint string boolean symbol undefined null`","JS types + `any unknown never void` + literal types","`bool char int long float double size_t` (+ `std::string`)","`bool byte short int long float double decimal char string`","all objects: `Integer Float String Symbol NilClass`","`int float string bool array object null`","`nil boolean number string function userdata thread table`","`int long float double BOOL char` + `NSInteger CGFloat id Class SEL NSString*`"]},{"feature":"collection types","cells":["`list tuple dict set frozenset`","`[]T` slice, `[N]T` array, `map[K]V`","`Vec\u003cT> HashMap\u003cK,V> HashSet\u003cT> BTreeMap VecDeque\u003cT>`","`Array Dictionary Set`","`List Map Set` (+ `MutableList` etc.)","`List Map Set Queue` (Collections Framework)","`List Map Set Record`","`Array Map Set Record\u003cK,V>`","`Array Object Map Set WeakMap`","`Array\u003cT> Map\u003cK,V> Set\u003cT> Record\u003cK,V>`","`std::vector std::map std::unordered_map std::set`","`List\u003cT> Dictionary\u003cK,V> HashSet\u003cT>` (+ LINQ)","`Array Hash Set Range`","`array` (ordered map, used as both list & dict)","`table` only (array & map in one); no native set / tuple","`NSArray NSDictionary NSSet` (+ `NSMutable*` variants)"]},{"feature":"Optionals / null safety","cells":["`int | None` (runtime `None`)","zero value / pointer / `(T, bool)`","`Option\u003cT>` = `Some(v) | None`","`Int?`, `if let` / `guard let` / `!`","`Int?`, `?.`, `?:`, `!!` (compile-time)","`Optional\u003cT>` (Java 8+, not language-level)","`int?` (sound null safety)","`string | null` (strict null checks always on)","`null` / `undefined`, `?.`","`T | null | undefined`, `strictNullChecks`","`std::optional\u003cT>` (C++17) / pointer","`int?` (`Nullable\u003cT>`), nullable refs (C# 8+)","`nil` (no static check)","`?int` / `int|null` (runtime)","`nil`; no static check (Luau strict mode)","no language-level optional; messaging `nil` is safe; `_Nullable` / `nonnull` annotations"]},{"feature":"type conversion / cast","cells":["`int(\"10\")`, `str(10)`","`int64(x)`, `strconv.Atoi(\"10\")` (no implicit cast)","`x as i32`, `\"10\".parse::\u003ci32>()`","`Int(\"10\")`, `as?` / `as!`","`x.toInt()`, `x as? String`","`(int) x`, `Integer.parseInt(\"10\")`","`int.parse('10')`, `x as int`","`Number.parseInt('10')`, `x as T` (only `as T`)","`Number(\"10\")`, `String(10)`","`Number(\"10\")`, `x as number`","`static_cast\u003cint>(x)`, `std::stoi`","`(int) x`, `Convert.ToInt32`, `x as string`","`x.to_i`, `x.to_s`","`(int) $x`, `intval($x)`","`tonumber(\"10\")`, `tostring(10)`","`(int) x`, `[@\"10\" integerValue]`, `isKindOfClass:`"]},{"feature":"string interpolation","cells":["`f\"Hello {myVar}\"`","`fmt.Sprintf(\"Hello %v\", myVar)`","`format!(\"Hello {}\", myVar)`","`\"Hello \\(myVar)\"`","`\"Hello $myVar\"`, `\"${a + b}\"`","`\"Hello \" + myVar` / `\"Hello %s\".formatted(myVar)`","`'Hello $myVar'`, `'${a + b}'`","template literal `` `Hello ${myVar}` ``","template literal `` `Hello ${myVar}` ``","template literal `` `Hello ${myVar}` ``","`std::format(\"Hello {}\", myVar)` (C++20)","`$\"Hello {myVar}\"`","`\"Hello #{myVar}\"`","`\"Hello $myVar\"`, `\"{$obj->x}\"`","no interpolation; `\"Hello \" .. myVar` / `string.format(\"Hello %s\", myVar)`","`[NSString stringWithFormat:@\"Hello %@\", myVar]`"]}]},{"name":"Collections","rows":[{"feature":"List / Array literal","cells":["`myList = ['a', 10, 2.5]`","`myList := []int{1, 2, 3}` / `var a [3]int`","`let v = vec![1, 2, 3];` / `let a = [1, 2, 3];`","`var list: [Int] = [1, 2, 3]`","`val list = listOf(1, 2, 3)` / `mutableListOf\u003cInt>()`","`List\u003cInteger> l = List.of(1, 2, 3);` / `new ArrayList\u003c>()`","`var list = \u003cint>[1, 2, 3];`","`let list: number[] = [1, 2, 3];`","`const list = [1, 2, 3];`","`const list: number[] = [1, 2, 3];`","`std::vector\u003cint> v{1, 2, 3};`","`var list = new List\u003cint> { 1, 2, 3 };`","`list = [1, 2, 3]`","`$list = [1, 2, 3];`","`local list = {'a', 10, 2.5}` (1-based)","`NSArray *list = @[@1, @2, @3];`"]},{"feature":"Tuple","cells":["`t = ('a', 10)`","no native tuple; use multiple returns `func f() (int, error)`","`let t: (i32, &str) = (10, \"a\");`","`let t = (10, \"a\")` / labelled `(x: 10, y: 20)`","`Pair(10, \"a\")` / `Triple(...)` (no native tuple)","no native; use `record` / `List.of`","`var t = (10, 'a');` (Records, Dart 3)","`let t: [number, string] = [10, 'a'];`","no native (array `const t = [10, 'a']`)","`const t: [number, string] = [10, 'a'];`","`std::tuple\u003cint, std::string> t{10, \"a\"};`","`(int, string) t = (10, \"a\");`","no native (array `t = [10, 'a']`)","no native (array / `list($a, $b) = $arr;`)","no native (multiple returns `function f() return 1, 2 end`)","no native (`NSArray` / custom class)"]},{"feature":"Dictionary / Map","cells":["`d = {'a': 1, 'b': 2}`","`m := map[string]int{\"a\": 1}`","`let m = HashMap::from([(\"a\", 1)]);`","`let d: [String: Int] = [\"a\": 1]`","`val m = mapOf(\"a\" to 1)` / `mutableMapOf`","`Map\u003cString,Integer> m = Map.of(\"a\", 1);`","`var m = {'a': 1};`","`let m: Map\u003cstring, number> = new Map([['a', 1]]);`","`const m = new Map([['a', 1]]);` / `{ a: 1 }`","`const m: Record\u003cstring, number> = { a: 1 };`","`std::map\u003cstd::string,int> m{{\"a\", 1}};`","`var d = new Dictionary\u003cstring,int> { [\"a\"] = 1 };`","`h = { 'a' => 1, b: 2 }`","`$m = ['a' => 1];`","`local m = { a = 1, ['b'] = 2 }`","`NSDictionary *m = @{@\"a\": @1};`"]},{"feature":"Set","cells":["`s = {1, 2, 3}` / `set()`","no native (use `map[T]struct{}`)","`HashSet::from([1, 2, 3])`","`let s: Set\u003cInt> = [1, 2, 3]`","`setOf(1, 2, 3)` / `mutableSetOf`","`Set.of(1, 2, 3)` / `new HashSet\u003c>()`","`var s = \u003cint>{1, 2, 3};`","`let s: Set\u003cnumber> = new Set([1, 2, 3]);`","`const s = new Set([1, 2, 3]);`","`const s: Set\u003cnumber> = new Set([1, 2, 3]);`","`std::set\u003cint> s{1, 2, 3};` / `std::unordered_set`","`var s = new HashSet\u003cint> { 1, 2, 3 };`","`require 'set'; s = Set[1, 2, 3]`","no native (array keys / `Ds\\Set` extension)","no native (`{ [1]=true, [2]=true }` idiom)","`NSSet *s = [NSSet setWithObjects:@1, @2, nil];`"]},{"feature":"indexing & slicing","cells":["`l[0]`, `l[-1]`, `l[1:3]`, `l[::2]`","`l[0]`, `l[1:3]` (slice; no negative index)","`v[0]`, `&v[1..3]`","`l[0]`, `l[1...3]`, `Array(l[1..\u003c3])`","`l[0]`, `l.slice(1..2)`, `l.take(3)`","`l.get(0)`, `l.subList(1, 3)`, `s.substring(1,3)`","`l[0]`, `l.sublist(1, 3)`","`l[0]`, `l.slice(1, 3)`","`l[0]`, `l.slice(1, 3)`","`l[0]`, `l.slice(1, 3)`","`v[0]`, `std::span(v).subspan(1, 2)`","`l[0]`, `l[^1]`, `l[1..3]`","`l[0]`, `l[-1]`, `l[1..2]`","`$l[0]`, `array_slice($l, 1, 2)`","`l[1]` (1-based); no slicing (`table.move` / `table.unpack`)","`list[0]`, `[list objectAtIndex:0]`, `subarrayWithRange:NSMakeRange(1,2)`"]},{"feature":"spread / destructuring","cells":["`a, b = t`, `[*l1, *l2]`, `{**d1, **d2}`","no spread; multi-assign `a, b := f()`","`let (a, b) = t;` / `..` struct update","`let (a, b) = t;` (no spread)","`val (a, b) = pair` / `*arr` (spread into vararg)","no spread; record patterns (Java 21, preview)","`var (a, b) = t;` / `[...l1, ...l2]` (Dart 3)","❌ destructuring forbidden; spread arrays only","`const [a, b] = arr;`, `const {x} = obj;`, `[...l1, ...l2]`","same as JavaScript","`auto [a, b] = t;` (C++17)","`var (a, b) = t;` / `[.. l1]` (C# 12)","`a, b = arr`, `*rest`","`[$a, $b] = $arr;`, `...$arr`","`table.unpack(t)` / `local a, b = f()` (no destructuring)","no native (fast enumeration / `enumerateObjectsUsingBlock:`)"]}]},{"name":"Operators & Control Flow","rows":[{"feature":"if statement","cells":["`if a > 0:`\n    `...`\n`elif a == 0:`\n    `...`\n`else:`\n    `...`","`if a > 0 { ... } else if a == 0 { ... } else { ... }`","`if a > 0 { ... } else if a == 0 { ... } else { ... }`","`if a > 0 { ... } else if a == 0 { ... } else { ... }`","`if (a > 0) { ... } else if (a == 0) { ... } else { ... }`; also an expression","`if (a > 0) { ... } else if (a == 0) { ... } else { ... }`","`if (a > 0) { ... } else if (a == 0) { ... } else { ... }`","`if (a > 0) { ... } else if (a == 0) { ... } else { ... }`","`if (a > 0) { ... } else if (a == 0) { ... } else { ... }`","same as JavaScript","`if (a > 0) { ... } else if (a == 0) { ... } else { ... }`","`if (a > 0) { ... } else if (a == 0) { ... } else { ... }`","`if a > 0`\n  `...`\n`elsif a == 0`\n  `...`\n`else`\n`end`; also `... if cond`","`if ($a > 0) { ... } elseif ($a == 0) { ... } else { ... }`","`if a > 0 then ... elseif a == 0 then ... else ... end`","`if (a > 0) { ... } else if (a == 0) { ... } else { ... }`"]},{"feature":"ternary / conditional expression","cells":["`x = a if cond else b`","— (use an `if` statement)","`let x = if cond { a } else { b };`","`let x = cond ? a : b`","— (`if (cond) a else b`)","`int x = cond ? a : b;`","`var x = cond ? a : b;`","`let x = cond ? a : b;`","`const x = cond ? a : b;`","`const x = cond ? a : b;`","`int x = cond ? a : b;`","`var x = cond ? a : b;`","`x = cond ? a : b` / `x = a if cond`","`$x = $cond ? $a : $b;`","`x = cond and a or b` (fails when `b` is false/nil)","`int x = cond ? a : b;`"]},{"feature":"switch / match","cells":["`match x:`\n  `case 1: ...`\n  `case _: ...` (3.10+)","`switch x { case 1: ...; default: ... }` (no fallthrough unless `fallthrough`)","`match x { 1 => ..., _ => ... }` (exhaustive)","`switch x { case 1: ...; default: ... }` (pattern matching)","`when (x) { 1 -> ...; else -> ... }`","`switch (x) { case 1 -> ...; default -> ...; }` (14+)","`switch (x) { case 1: ...; default: ... }` / Dart 3 patterns","`switch (x) { case 1: ...; break; default: ... }`","`switch (x) { case 1: ...; break; default: ... }`","same as JavaScript","`switch (x) { case 1: ...; break; default: ...; }`","`x switch { 1 => ..., _ => ... }`","`case x`\n  `when 1 then ...`\n  `else ...`\n`end`","`match ($x) { 1 => ..., default => ... };` (PHP 8)","no native (table dispatch / if-elseif chain)","`switch (x) { case 1: ...; break; default: ...; }` (integers only)"]},{"feature":"for loop","cells":["`for i in range(5): ...` / `for item in seq: ...`","`for i := 0; i \u003c 5; i++ { ... }` (`for` is the only loop keyword)","`for i in 0..5 { ... }`","`for i in 0..\u003c5 { ... }`","`for (i in 0 until 5) { ... }` / `repeat(5)`","`for (int i = 0; i \u003c 5; i++) { ... }`","`for (var i = 0; i \u003c 5; i++) { ... }`","`for (let i = 0; i \u003c 5; i++) { ... }`","`for (let i = 0; i \u003c 5; i++) { ... }`","`for (let i = 0; i \u003c 5; i++) { ... }`","`for (int i = 0; i \u003c 5; ++i) { ... }`","`for (int i = 0; i \u003c 5; i++) { ... }`","`5.times do |i| ... end`","`for ($i = 0; $i \u003c 5; $i++) { ... }`","`for i = 1, 5 do ... end` / `for i = 1, #list do end`","`for (int i = 0; i \u003c 5; i++) { }` / `for (id x in list) { }`"]},{"feature":"while loop","cells":["`while cond:` / `break` / `continue` (no do-while)","`for cond { ... }` (use `for`)","`while cond { ... }` / `loop { ... }`","`while cond { ... }` / `repeat { } while cond`","`while (cond) { }` / `do { } while (cond)`","`while (cond) { }` / `do { } while (cond);`","`while (cond) { }` / `do { } while (cond);`","`while (cond) { }` / `do { } while (cond);`","`while (cond) { }` / `do { } while (cond);`","same as JavaScript","`while (cond) { }` / `do { } while (cond);`","`while (cond) { }` / `do { } while (cond);`","`while cond ... end` / `until cond` / `begin ... end while`","`while ($cond) { }` / `do { } while ($cond);`","`while cond do ... end` / `repeat ... until cond`","`while (cond) { }` / `do { } while (cond);`"]},{"feature":"iterate collection","cells":["`for x in seq:` / `for k, v in d.items():`","`for i, v := range slice { }` / `for k, v := range m { }`","`for x in &v { }` / `for (k, v) in &m { }`","`for x in list { }` / `for (k, v) in dict { }`","`for (x in list) { }` / `list.forEach { }`","`for (var x : list) { }` / `list.forEach(x -> ...)`","`for (final x in list) { }` / `list.forEach((x) { })`","`for (let x of list) { }` / `list.forEach((x) => { })`","`for (const x of list) { }` / `list.forEach(x => ...)`","same as JavaScript","`for (auto& x : v) { }` / ranges (C++20)","`foreach (var x in list) { }` / LINQ","`list.each do |x| ... end`","`foreach ($list as $x) { }` / `foreach ($m as $k => $v) { }`","`for k, v in pairs(t) do end` / `for i, v in ipairs(list) do end`","`for (id x in list) { }` / `[list enumerateObjectsUsingBlock:^(id x, NSUInteger i, BOOL *stop) { }]`"]},{"feature":"null coalescing / elvis","cells":["`x = a or b` / `a if a is not None else b`","— (zero values)","`x.unwrap_or(b)` / `?` for propagation","`x = a ?? b`","`x = a ?: b`","`Optional.ofNullable(a).orElse(b)`","`x = a ?? b` / `a ??= b`","`x = a ?? b`","`x = a ?? b` / `a || b`","`x = a ?? b`","— (`value_or(b)` on `std::optional`)","`x = a ?? b` / `a?.Method()`","`x = a || b`","`$x = $a ?? $b;` / `?->`","`x = a or b` (both `nil` and `false` are falsy)","no native (`a ?: b` GCC extension)"]}]},{"name":"Functions","rows":[{"feature":"function declaration","cells":["`def sum(a, b):`\n    `return a + b`","`func sum(a, b int) int { return a + b }`","`fn sum(a: i32, b: i32) -> i32 { a + b }`","`func sum(_ a: Int, _ b: Int) -> Int { return a + b }`","`fun sum(a: Int, b: Int): Int = a + b`","`int sum(int a, int b) { return a + b; }` (must be inside a class)","`int sum(int a, int b) => a + b;`","`function sum(a: number, b: number): number { return a + b; }`","`function sum(a, b) { return a + b; }`","`function sum(a: number, b: number): number { return a + b; }`","`int sum(int a, int b) { return a + b; }`","`int Sum(int a, int b) => a + b;`","`def sum(a, b)`\n  `a + b`\n`end`","`function sum(int $a, int $b): int { return $a + $b; }`","`function sum(a, b) return a + b end` / `local function sum(...) ... end`","`- (int)sumWithA:(int)a b:(int)b { return a + b; }` (method) / C function"]},{"feature":"lambda / anonymous function","cells":["`f = lambda a, b: a + b`","`f := func(a, b int) int { return a + b }`","`let f = |a, b| a + b;`","`let f = { (a: Int, b: Int) in a + b }` / `{ $0 + $1 }`","`val f = { a: Int, b: Int -> a + b }`","`BiFunction\u003cInteger,Integer,Integer> f = (a, b) -> a + b;`","`var f = (int a, int b) => a + b;`","`const f = (a: number, b: number): number => a + b;` (function expressions banned)","`const f = (a, b) => a + b;`","`const f = (a: number, b: number): number => a + b;`","`auto f = [](int a, int b) { return a + b; };`","`Func\u003cint,int,int> f = (a, b) => a + b;`","`f = ->(a, b) { a + b }` / `lambda { }`","`$f = fn($a, $b) => $a + $b;`","`local f = function(a, b) return a + b end` (no arrow syntax)","Blocks: `int (^f)(int, int) = ^(int a, int b) { return a + b; };`"]},{"feature":"default & named parameters","cells":["`def f(a, b=2): ...` / `f(b=3, a=1)`","— (functional options idiom)","— (`Option` / builder)","`func f(a: Int, b: Int = 2)` / `f(a: 1, b: 3)` (argument labels)","`fun f(a: Int, b: Int = 2)` / `f(b = 3, a = 1)`","— (overloading / builder)","`void f(int a, {int b = 2}) {}` / `f(1, b: 3)`","`function f(a: number, b: number = 2): void {}` (no named args)","`function f(a, b = 2) {}` (named args via object destructuring)","same as JavaScript","`void f(int a, int b = 2);` (no named args)","`void F(int a, int b = 2)` / `F(b: 3, a: 1)`","`def f(a, b: 2)` / `f(1, b: 3)`","`function f($a, $b = 2)` / `f(b: 3, a: 1)` (PHP 8)","no native (table arg `function f(opts)` idiom)","no defaults; labelled method name `sumWithA:b:` (fixed order)"]},{"feature":"variadic parameters","cells":["`def f(*args, **kwargs): ...`","`func f(nums ...int) { }`","— (slice `&[T]` / macros)","`func f(_ nums: Int...) { }`","`fun f(vararg nums: Int) { }`","`void f(int... nums) { }`","— (use `List` / optional positional args)","`function f(...nums: number[]): void {}`","`function f(...nums) { }`","`function f(...nums: number[]): void { }`","`template\u003cclass... Ts> void f(Ts... args)` / `std::initializer_list`","`void F(params int[] nums) { }`","`def f(*args, **kwargs)`","`function f(...$nums) { }`","`function f(...) local args = {...} end` / `table.unpack`","`- (void)f:(id)first, ... NS_REQUIRES_NIL_TERMINATION;` / C `va_list`"]},{"feature":"map / filter / reduce","cells":["`map(f, xs)`, `[x*2 for x in xs]`, `functools.reduce`","— (loop; `slices` / `maps` pkgs since Go 1.21)","`xs.iter().map(|x| x*2).filter(...).collect()`","`xs.map { $0 * 2 }.filter { }.reduce(0, +)`","`xs.map { it * 2 }.filter { }.fold(0) { }`","`xs.stream().map(x -> x*2).filter(...).toList()`","`xs.map((x) => x * 2).where((x) => ...).fold(0, ...)`","`xs.map((x) => x * 2).filter((x) => ...)`","`xs.map(x => x*2).filter(...).reduce((a,b)=>a+b, 0)`","same as JavaScript","`std::transform` / `std::ranges::views::filter` (C++20)","`xs.Select(x => x*2).Where(...).Aggregate(...)` (LINQ)","`xs.map { |x| x*2 }.select { }.reduce(:+)`","`array_map(fn($x)=>$x*2, $xs)` / `array_filter` / `array_reduce`","no built-in (manual loop / `luafun` etc.)","no built-in (`enumerateObjectsUsingBlock:` / `valueForKeyPath:`)"]}]},{"name":"OOP & Type System","rows":[{"feature":"class declaration","cells":["`class User:`\n    `def __init__(self, name):`\n        `self.name = name`","`type User struct { Name string }` + `func (u User) Hi() {}`","`struct User { name: String }` + `impl User { fn new(n: String) -> Self {} }`","`class User { var name: String; init(name: String) { ... } }`","`class User(val name: String)` (primary constructor)","`public class User { private final String name; public User(String n) {...} }`","`class User { final String name; User(this.name); }`","`class User { name: string = ''; constructor(n: string) { this.name = n; } }`","`class User { constructor(name) { this.name = name; } }`","`class User { constructor(public name: string) {} }`","`class User { public: std::string name; User(std::string n): name(n) {} };`","`public class User { public string Name { get; set; } }`","`class User`\n  `def initialize(name)`\n    `@name = name`\n  `end`\n`end`","`class User { public function __construct(public string $name) {} }`","no native class (metatable): `User = {}; User.__index = User; function User:new(n) return setmetatable({name=n}, self) end`","`@interface User : NSObject` + `@property NSString *name;` + `@implementation User` + `@end`"]},{"feature":"struct / data class / record","cells":["`@dataclass`\n`class User:`\n    `name: str` / `NamedTuple`","`type User struct { Name string }` (value type)","`struct User { name: String }` / `#[derive(Debug, Clone)]`","`struct User { var name: String }` (value type, COW)","`data class User(val name: String)` (equals / copy)","`record User(String name) {}` (16+)","`typedef User = ({String name});` (Dart 3)","`interface User { name: string }` (object literal needs explicit type)","— (plain object `{ name: 'x' }`)","`interface User { name: string }` / `type User = { name: string }`","`struct User { std::string name; };` (public by default)","`record User(string Name);` / `struct Point { int X; int Y; }`","`User = Struct.new(:name)` / `Data.define(:name)` (3.2)","— (class / `readonly class`)","no native (`table` is the struct)","C `struct` / no data class (class + `@property`)"]},{"feature":"interface / protocol / trait","cells":["`abc.ABC` + `@abstractmethod` / `typing.Protocol`","`type Reader interface { Read(p []byte) (int, error) }` (implicit)","`trait Reader { fn read(&self) -> usize; }` + `impl Reader for X`","`protocol Reader { func read() -> Int }` + extension defaults","`interface Reader { fun read(): Int }`","`interface Reader { int read(); }` / `default`","`abstract interface class Reader { int read(); }`","`interface Reader { read(): number; }`","— (duck typing)","`interface Reader { read(): number; }` (structural)","pure virtual class / C++20 `concept`","`interface IReader { int Read(); }`","`module Reader` with `raise NotImplementedError` (mixin)","`interface Reader { public function read(): int; }` / `trait`","no native (metatable / duck typing)","`@protocol Reader \u003cNSObject> - (int)read; @end` + `\u003cReader>` conformance"]},{"feature":"inheritance","cells":["`class Dog(Animal):` / multiple / `super()`","— (embedding `struct { Animal }`)","— (traits + composition)","`class Dog: Animal, Pet { }` / `override`","`class Dog : Animal()` (classes are `final` unless `open`)","`class Dog extends Animal implements Pet { }`","`class Dog extends Animal with Pet { }` (mixin)","`class Dog extends Animal implements Pet { }`","`class Dog extends Animal { }`","same as JavaScript","`class Dog : public Animal, public Pet { }` / `virtual`","`class Dog : Animal, IPet { }` / `override`","`class Dog \u003c Animal; include Pet; end`","`class Dog extends Animal implements Pet { use TraitA; }`","`setmetatable(Dog, {__index = Animal})`","`@interface Dog : Animal \u003cPet>` (single inheritance + protocols)"]},{"feature":"enum","cells":["`class Color(Enum):`\n    `RED = 1`","`const ( Red Color = iota; Green; Blue )`","`enum Color { Red, Green, Blue }` / data-carrying variants","`enum Color { case red, green }` / associated values","`enum class Color { RED, GREEN }` / `sealed class`","`enum Color { RED, GREEN }` (fields & methods)","`enum Color { red, green }` (enhanced enum)","`enum Color { Red, Green }` (compile-time constants only)","— (`Object.freeze({...})`)","`enum Color { Red, Green }` / union `'red' | 'green'`","`enum class Color { Red, Green };`","`enum Color { Red, Green }`","— (`module Color; RED = 1; end` / Symbol)","`enum Color: string { case Red = 'red'; }` (8.1)","no native (`Color = { Red = 1, Green = 2 }`)","`typedef NS_ENUM(NSInteger, Color) { ColorRed, ColorGreen };`"]},{"feature":"generics","cells":["`def first(xs: list[T]) -> T` (3.9+) / `Generic[T]`","`func First[T any](xs []T) T` (1.18+)","`fn first\u003cT>(xs: &[T]) -> &T` / `where T: Clone`","`func first\u003cT>(_ xs: [T]) -> T?`","`fun \u003cT> first(xs: List\u003cT>): T` / `reified`","`public \u003cT> T first(List\u003cT> xs)` (type erasure)","`T first\u003cT>(List\u003cT> xs) => xs.first;`","`function first\u003cT>(xs: T[]): T { return xs[0]; }` (basic generics only)","— (dynamic typing)","`function first\u003cT>(xs: T[]): T { return xs[0]; }` (erased)","`template \u003ctypename T> T first(const std::vector\u003cT>& xs);`","`T First\u003cT>(IEnumerable\u003cT> xs) => xs.First();` (reified)","— (duck typing)","— (`@template` docblock / PHPStan)","no native (dynamic typing; Luau supports them)","lightweight generics `NSArray\u003cNSString *> *` (erased)"]}]},{"name":"Error Handling & Concurrency","rows":[{"feature":"exception / error handling","cells":["`try: ... except ValueError as e: ... finally: ...`","`v, err := f(); if err != nil { return err }` / `panic` + `recover`","`Result\u003cT,E>` + `match` / `?` (no exceptions)","`do { try f() } catch { print(error) }` / `throws`","`try { } catch (e: Exception) { } finally { }`","`try { } catch (Exception e) { } finally { }` (checked exceptions)","`try { } on FormatException catch (e) { } finally { }`","`try { } catch (err) { } finally { }` (no typed catch; throw Error only)","`try { } catch (e) { } finally { }`","same as JS (`catch (e: unknown)`)","`try { } catch (const std::exception& e) { }` / `noexcept`","`try { } catch (Exception e) when (...) { } finally { }`","`begin ... rescue => e ... ensure ... end` / `raise`","`try { } catch (Exception $e) { } finally { }`","`pcall(function() ... end)` / `xpcall` / `error(\"msg\")` / `assert`","`@try { } @catch (NSException *e) { } @finally { }`; idiomatic `NSError **`"]},{"feature":"error propagation / Result","cells":["`raise` exceptions / 3rd-party Result","`(T, error)` + `if err != nil { return err }` / `errors.Is`","`Result\u003cT,E>` + `?` / `Option\u003cT>` / `anyhow`","`throws` + `try` / `Result\u003cT, Error>`","exceptions / `Result\u003cT>` / Arrow Either","`throws` declaration / `Optional\u003cT>`","exceptions (no built-in Result)","`Promise.reject` / `BusinessError` / try-catch","`throw` / `Promise.reject` / `Error`","same as JS + `T | Error` union","`std::expected\u003cT,E>` (C++23) / `std::optional`","exceptions (no built-in Result)","`raise` / return `nil` by convention","exceptions / `throw` expression (PHP 8)","`local ok, res = pcall(f); if not ok then return nil, res end`","`NSError **error` out-param + `BOOL` return / `@throw`"]},{"feature":"async / concurrency","cells":["`async def f(): await g()` / asyncio / threading","`go f()` (goroutine) / `chan` / `sync.WaitGroup`","`async fn` + `.await` / Tokio / `std::thread::spawn`","`async let` / `await` / `Task { }` / actor","`suspend fun` / coroutine `launch` / Flow","`CompletableFuture` / virtual threads (21)","`Future\u003cT>` / `async` `await` / `Isolate` / `Stream`","`async` / `await` + `Promise` / `TaskPool` / `Worker`","`async` / `await` + `Promise` / Web Worker","same as JavaScript","`std::async` / `std::thread` / `co_await` (C++20)","`async Task\u003cT>` + `await` / `Task.Run`","`Thread.new` / Ractor / Fiber / async gem","traditionally sync / Swoole / ReactPHP / fibers (8.1)","coroutines `coroutine.create` / `resume` / `yield` (no OS threads)","GCD `dispatch_async(dispatch_get_global_queue(...), ^{ })` / `NSOperationQueue` / completion blocks"]},{"feature":"resource cleanup / defer","cells":["`with open(...) as f:` (context manager)","`defer f.Close()`","RAII / `Drop` trait (automatic at scope end)","`defer { }` / `deinit`","`.use { }` (Closeable) / `finally`","`try (var r = open()) { }` (try-with-resources)","`try` / `finally`","`try` / `finally`","`try` / `finally` / `using` (proposal)","`try` / `finally` / `using` (TS 5.2)","RAII / destructor / `std::unique_ptr`","`using (var r = ...) { }` / `using var r = ...;`","`File.open(...) do |f| ... end` / `ensure`","`try` / `finally` / `__destruct`","no `with`; Lua 5.4 `\u003cclose>` variables / explicit close in `pcall`","`@autoreleasepool { }` / `-dealloc` / `@try/@finally`"]}]}]}</script>
+<script>
+(function () {
+  'use strict';
+  var DATA = JSON.parse(document.getElementById('sheet-data').textContent);
+  var LANGS = DATA.languages;
+  var SECTIONS = DATA.sections;
+  var TOTAL = SECTIONS.reduce(function (n, s) { return n + s.rows.length; }, 0);
+  var $ = function (id) { return document.getElementById(id); };
+
+  var PRESETS = {
+    all: LANGS.slice(),
+    none: [],
+    web: ['JavaScript', 'TypeScript', 'ArkTS', 'PHP', 'Ruby'],
+    systems: ['Go', 'Rust', 'C++', 'Objective-C'],
+    mobile: ['Swift', 'Kotlin', 'Dart', 'ArkTS', 'Objective-C'],
+    scripting: ['Python', 'Ruby', 'Lua', 'PHP', 'JavaScript'],
+    jvm: ['Java', 'Kotlin', 'C#'],
+    apple: ['Swift', 'Objective-C', 'C++']
+  };
+  Object.keys(PRESETS).forEach(function (k) {
+    PRESETS[k] = PRESETS[k].filter(function (l) { return LANGS.indexOf(l) >= 0; });
+  });
+
+  var state = {
+    selected: new Set(LANGS),
+    query: '',
+    collapsed: new Set(),
+    dark: false
+  };
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function renderText(t) {
+    return esc(t).replace(/\n/g, '<br>').replace(/—/g, '<span class="na">—</span>');
+  }
+  function renderCell(raw) {
+    if (!raw) { return ''; }
+    var re = /``\s*([\s\S]*?)\s*``|`([^`\n]*?)`/g;
+    var out = '', last = 0, m;
+    while ((m = re.exec(raw)) !== null) {
+      out += renderText(raw.slice(last, m.index));
+      out += '<code>' + esc(m[1] !== undefined ? m[1] : m[2]) + '</code>';
+      last = re.lastIndex;
+    }
+    return out + renderText(raw.slice(last));
+  }
+  function plain(raw) {
+    return raw.replace(/`+/g, '').replace(/\n/g, ' ');
+  }
+  function visibleRows(sec) {
+    var q = state.query.trim().toLowerCase();
+    if (!q) { return sec.rows; }
+    return sec.rows.filter(function (r) {
+      return r.feature.toLowerCase().indexOf(q) >= 0 ||
+        r.cells.some(function (c) { return plain(c).toLowerCase().indexOf(q) >= 0; });
+    });
+  }
+
+  function renderChips() {
+    $('chips').innerHTML = LANGS.map(function (l) {
+      return '<button type="button" class="chip' + (state.selected.has(l) ? ' on' : '') +
+        '" data-lang="' + esc(l) + '">' + esc(l) + '</button>';
+    }).join('');
+  }
+  function renderHead(langs) {
+    $('thead').innerHTML = '<tr><th class="feature-col">Feature' +
+      '<span class="th-hint">click a language to focus it</span></th>' +
+      langs.map(function (l) {
+        return '<th class="lang-col" data-lang="' + esc(l) + '" title="Show only ' + esc(l) +
+          '">' + esc(l) + '</th>';
+      }).join('') + '</tr>';
+  }
+  function renderBody() {
+    var langs = LANGS.filter(function (l) { return state.selected.has(l); });
+    var indices = [];
+    LANGS.forEach(function (l, i) { if (state.selected.has(l)) { indices.push(i); } });
+    if (!langs.length) {
+      $('tbody').innerHTML = '<tr><td class="empty">No language selected. Pick one above or press "All".</td></tr>';
+      return { langs: langs, shown: 0, matched: 0 };
+    }
+    var html = '', shown = 0, matched = 0;
+    SECTIONS.forEach(function (sec, si) {
+      var rows = visibleRows(sec);
+      if (!rows.length) { return; }
+      matched += rows.length;
+      var open = !state.collapsed.has(si);
+      html += '<tr class="section-row" data-sec="' + si + '"><td colspan="' + (langs.length + 1) +
+        '"><span class="caret">' + (open ? '&#9662;' : '&#9656;') + '</span>' + esc(sec.name) +
+        '<span class="sec-count">' + rows.length + ' / ' + sec.rows.length + '</span></td></tr>';
+      if (!open) { return; }
+      rows.forEach(function (r) {
+        shown++;
+        html += '<tr class="data-row"><th class="feature-col">' + esc(r.feature) + '</th>' +
+          indices.map(function (i) {
+            return '<td data-col="' + i + '">' + renderCell(r.cells[i]) + '</td>';
+          }).join('') + '</tr>';
+      });
+    });
+    if (!shown) {
+      var msg = matched === 0
+        ? 'No feature matches "' + esc(state.query) + '".'
+        : 'All matching sections are folded. Click a section title to expand.';
+      html = '<tr><td class="empty" colspan="' + (langs.length + 1) + '">' + msg +
+        '</td></tr>';
+    }
+    $('tbody').innerHTML = html;
+    return { langs: langs, shown: shown, matched: matched };
+  }
+  function updateInfo(res) {
+    $('langCount').textContent = res.langs.length + ' / ' + LANGS.length;
+    $('featCount').textContent = TOTAL;
+    $('matchInfo').textContent = state.query
+      ? res.matched + ' of ' + TOTAL + ' features match'
+      : res.shown + ' features shown';
+  }
+  function render() {
+    renderChips();
+    renderHead(LANGS.filter(function (l) { return state.selected.has(l); }));
+    updateInfo(renderBody());
+  }
+
+  $('chips').addEventListener('click', function (e) {
+    var b = e.target.closest('.chip');
+    if (!b) { return; }
+    var l = b.getAttribute('data-lang');
+    if (state.selected.has(l)) { state.selected.delete(l); } else { state.selected.add(l); }
+    render();
+  });
+  document.querySelector('.presets').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-preset]');
+    if (!b) { return; }
+    state.selected = new Set(PRESETS[b.getAttribute('data-preset')] || []);
+    render();
+  });
+  $('thead').addEventListener('click', function (e) {
+    var th = e.target.closest('[data-lang]');
+    if (!th) { return; }
+    state.selected = new Set([th.getAttribute('data-lang')]);
+    render();
+  });
+  $('tbody').addEventListener('click', function (e) {
+    var tr = e.target.closest('.section-row');
+    if (!tr) { return; }
+    var si = Number(tr.getAttribute('data-sec'));
+    if (state.collapsed.has(si)) { state.collapsed.delete(si); } else { state.collapsed.add(si); }
+    updateInfo(renderBody());
+  });
+
+  var highlighted = null;
+  function clearHighlight() {
+    if (highlighted === null) { return; }
+    document.querySelectorAll('td.col-hl').forEach(function (el) { el.classList.remove('col-hl'); });
+    highlighted = null;
+  }
+  $('tbody').addEventListener('mouseover', function (e) {
+    var cell = e.target.closest('td[data-col]');
+    if (!cell) { return; }
+    var c = cell.getAttribute('data-col');
+    if (highlighted === c) { return; }
+    clearHighlight();
+    highlighted = c;
+    document.querySelectorAll('td[data-col="' + c + '"]').forEach(function (el) {
+      el.classList.add('col-hl');
+    });
+  });
+  $('tbody').addEventListener('mouseleave', clearHighlight);
+
+  var timer;
+  $('search').addEventListener('input', function (e) {
+    var v = e.target.value;
+    clearTimeout(timer);
+    timer = setTimeout(function () { state.query = v; updateInfo(renderBody()); }, 110);
+  });
+  $('themeBtn').addEventListener('click', function () {
+    state.dark = !state.dark;
+    document.documentElement.setAttribute('data-theme', state.dark ? 'dark' : 'light');
+    $('themeBtn').textContent = state.dark ? 'Light' : 'Dark';
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && document.activeElement !== $('search')) {
+      e.preventDefault(); $('search').focus();
+    }
+    if (e.key === 'Escape' && document.activeElement === $('search')) {
+      $('search').value = ''; state.query = ''; updateInfo(renderBody());
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
